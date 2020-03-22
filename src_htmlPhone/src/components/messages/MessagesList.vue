@@ -31,15 +31,23 @@ export default {
     onOption: function (data) {
       if (data.number === undefined) return
       this.disableList = true
+
+      // If it's already a contact, we remove the 'Add contact' modal choice.
+      const isContact = this.contacts.find(contact => contact.number === data.number) !== undefined
+      const modalChoices = [
+        {id: 4, title: this.IntlString('APP_PHONE_CALL'), icons: 'fa-phone'},
+        {id: 5, title: this.IntlString('APP_PHONE_CALL_ANONYMOUS'), icons: 'fa-mask'},
+        {id: 6, title: this.IntlString('APP_CONTACT_ADD_AS_CONTACT'), icons: 'fa-address-card', color: 'green'},
+        {id: 1, title: this.IntlString('APP_MESSAGE_ERASE_CONVERSATION'), icons: 'fa-trash', color: 'orange'},
+        {id: 2, title: this.IntlString('APP_MESSAGE_ERASE_ALL_CONVERSATIONS'), icons: 'fa-trash', color: 'red'},
+        {id: 3, title: this.IntlString('CANCEL'), icons: 'fa-undo'}
+      ]
+      if (isContact) {
+        modalChoices.splice(2, 1)
+      }
+
       Modal.CreateModal({
-        choix: [
-          {id: 4, title: this.IntlString('APP_PHONE_CALL'), icons: 'fa-phone'},
-          {id: 5, title: this.IntlString('APP_PHONE_CALL_ANONYMOUS'), icons: 'fa-mask'},
-          {id: 6, title: this.IntlString('APP_MESSAGE_NEW_MESSAGE'), icons: 'fa-sms'},
-          {id: 1, title: this.IntlString('APP_MESSAGE_ERASE_CONVERSATION'), icons: 'fa-trash', color: 'orange'},
-          {id: 2, title: this.IntlString('APP_MESSAGE_ERASE_ALL_CONVERSATIONS'), icons: 'fa-trash', color: 'red'},
-          {id: 3, title: this.IntlString('CANCEL'), icons: 'fa-undo'}
-        ]
+        choix: modalChoices
       }).then(rep => {
         if (rep.id === 1) {
           this.deleteMessagesNumber({num: data.number})
@@ -50,7 +58,7 @@ export default {
         } else if (rep.id === 5) {
           this.startCall({ numero: '#' + data.number })
         } else if (rep.id === 6) {
-          this.$router.push({name: 'messages.view', params: data})
+          this.$router.push({ name: 'contacts.view', params: { id: -1, number: data.number, display: this.IntlString('APP_CONTACT_NEW') } })
         }
         this.disableList = false
       })

@@ -1,7 +1,7 @@
 <template>
   <div class="screen" @click="onBackspace">
     <div class='elements'>
-      <img class="logo_maze" src="/html/static/img/app_bank/logo_mazebank.jpg">
+      <img class="logo_maze" src="/html/static/img/app_bank/logo.png">
       <div class="hr"></div>
       <div class='element'>
         <div class="element-content">
@@ -73,7 +73,7 @@ export default {
   background-color: #EB202D;
 }
 .logo_maze {
-  width: 100%; 
+  width: 100%;
   height: auto;
   flex-shrink: 0;
 }
